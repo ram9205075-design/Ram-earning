@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Ram Earning Tools - Earn Money Online</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -10,14 +10,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         * {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f9fafb;
+            overflow-x: hidden;
         }
         
         .gradient-btn {
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 100%;
         }
         
         .gradient-btn:hover {
@@ -25,15 +38,27 @@
             box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
         }
         
+        .gradient-btn:active {
+            transform: translateY(0);
+        }
+        
+        .gradient-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .card {
             background: white;
             border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
         }
         
         .card:hover {
-            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
         
         .loading-spinner {
@@ -53,129 +78,55 @@
         .modal {
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
+            padding: 16px;
+        }
+        
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
+            display: inline-block;
+            white-space: nowrap;
         }
         
         .status-pending { background: #fef3c7; color: #92400e; }
         .status-approved { background: #d1fae5; color: #065f46; }
         .status-rejected { background: #fee2e2; color: #991b1b; }
         
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Mobile Optimizations */
+        .mobile-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         
-        .admin-table th {
-            background: #f9fafb;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #374151;
-            border-bottom: 2px solid #e5e7eb;
+        .mobile-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
         
-        .admin-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .admin-table tr:hover {
-            background: #f9fafb;
-        }
-        
-        .copy-btn {
-            padding: 4px 8px;
-            background: #f3f4f6;
-            border-radius: 6px;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .copy-btn:hover {
-            background: #e5e7eb;
-            color: #374151;
-        }
-        
-        .action-btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        
-        .action-btn.approve {
-            background: #10b981;
-            color: white;
-        }
-        
-        .action-btn.approve:hover {
-            background: #059669;
-        }
-        
-        .action-btn.reject {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .action-btn.reject:hover {
-            background: #dc2626;
-        }
-        
-        .action-btn.edit {
-            background: #8b5cf6;
-            color: white;
-        }
-        
-        .action-btn.edit:hover {
-            background: #7c3aed;
-        }
-        
-        .action-btn.view {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .action-btn.view:hover {
-            background: #2563eb;
-        }
-        
-        .tab-btn {
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.2s;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-        }
-        
-        .tab-btn.active {
-            color: #8b5cf6;
-            border-bottom-color: #8b5cf6;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-        }
-
         .method-btn {
-            padding: 10px;
+            padding: 12px 8px;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 500;
             transition: all 0.2s;
             cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .method-btn.active {
@@ -184,59 +135,219 @@
             color: #8b5cf6;
         }
 
-        .method-btn:hover {
-            border-color: #8b5cf6;
-        }
-
         .user-logout-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: #ef4444;
             color: white;
-            padding: 12px 24px;
+            padding: 12px 20px;
             border-radius: 50px;
             font-weight: 600;
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
             cursor: pointer;
             transition: all 0.3s;
             z-index: 100;
+            font-size: 14px;
+            border: none;
         }
 
-        .user-logout-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        .user-logout-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: block;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            color: #6b7280;
+        }
+        
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-nav.open {
+            left: 0;
+        }
+        
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .mobile-nav-overlay.open {
+            display: block;
+        }
+        
+        /* Touch-friendly buttons */
+        button, 
+        [role="button"],
+        .clickable {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 12px;
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .data-table tr:hover {
+            background: #f9fafb;
+        }
+        
+        /* Payout Card Animation */
+        .payout-card {
+            animation: fadeInUp 0.5s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Stats Card */
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        /* Better spacing on mobile */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem !important;
+            }
+            
+            h2 {
+                font-size: 1.25rem !important;
+            }
+            
+            .p-6 {
+                padding: 1rem !important;
+            }
+            
+            .gap-4 {
+                gap: 0.75rem !important;
+            }
+            
+            .stat-card {
+                padding: 16px !important;
+            }
+            
+            .grid {
+                gap: 12px !important;
+            }
+            
+            .data-table {
+                font-size: 0.875rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 8px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
+
+    <!-- Mobile Navigation -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+    <div id="mobileNav" class="mobile-nav">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-bold">Menu</h2>
+            <button onclick="closeMobileNav()" class="text-gray-500 p-2">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <button onclick="showSection('home'); closeMobileNav()" class="text-left p-3 hover:bg-gray-100 rounded-lg">Home</button>
+            <button onclick="showSection('dashboard'); closeMobileNav()" class="text-left p-3 hover:bg-gray-100 rounded-lg">Dashboard</button>
+            <button id="mobileAdminBtn" onclick="showSection('admin'); closeMobileNav()" class="text-left p-3 hover:bg-gray-100 rounded-lg">Admin</button>
+            <button id="mobileLogoutBtn" onclick="logout(); closeMobileNav()" class="hidden text-left p-3 text-red-600 hover:bg-red-50 rounded-lg">Logout</button>
+        </div>
+    </div>
 
     <!-- Navigation -->
     <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16">
-                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 class="text-lg md:text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     Ram Earning Tools
                 </h1>
-                <div class="flex items-center gap-4">
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-4">
                     <button onclick="showSection('home')" class="text-gray-700 hover:text-indigo-600 px-3 py-2">Home</button>
                     <button onclick="showSection('dashboard')" class="text-gray-700 hover:text-indigo-600 px-3 py-2">Dashboard</button>
-                    <button id="adminBtn" onclick="showSection('admin')" class="text-gray-700 hover:text-indigo-600 px-3 py-2">
+                    <button id="desktopAdminBtn" onclick="showSection('admin')" class="text-gray-700 hover:text-indigo-600 px-3 py-2">
                         <i class="fas fa-user-shield text-xl"></i>
                     </button>
-                    <button id="logoutBtn" onclick="logout()" class="hidden text-red-600 hover:text-red-700 px-3 py-2">
+                    <button id="desktopLogoutBtn" onclick="logout()" class="hidden text-red-600 hover:text-red-700 px-3 py-2">
                         <i class="fas fa-sign-out-alt text-xl"></i> Logout
                     </button>
                 </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn md:hidden" onclick="openMobileNav()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- User Logout Button (for dashboard) -->
-    <div id="userLogoutBtn" class="user-logout-btn hidden" onclick="userLogout()">
-        <i class="fas fa-sign-out-alt mr-2"></i>Logout from Dashboard
-    </div>
+    <button id="userLogoutBtn" class="user-logout-btn hidden" onclick="userLogout()">
+        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+    </button>
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
@@ -244,33 +355,33 @@
     </div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-4 md:py-8">
         
         <!-- Home Section -->
         <div id="homeSection">
             <!-- Hero -->
-            <div class="text-center py-12">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Start Earning Money Today!</h1>
-                <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">Join thousands of users who are already earning daily with Ram Earning Tools.</p>
-                <button onclick="showRegisterModal()" class="gradient-btn text-white px-8 py-3 rounded-lg text-lg font-semibold">
+            <div class="text-center py-8 md:py-12">
+                <h1 class="text-2xl md:text-4xl font-bold text-gray-900 mb-3">Start Earning Money Today!</h1>
+                <p class="text-sm md:text-lg text-gray-600 mb-6 max-w-2xl mx-auto px-4">Join thousands of users who are already earning daily with Ram Earning Tools.</p>
+                <button onclick="showRegisterModal()" class="gradient-btn text-white px-6 md:px-8 py-3 rounded-lg text-base md:text-lg font-semibold w-auto">
                     <i class="fas fa-rocket mr-2"></i>Start Earning Now
                 </button>
             </div>
 
             <!-- Registration Modal -->
             <div id="registerModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
-                <div class="bg-white rounded-xl max-w-md w-full p-6">
+                <div class="bg-white rounded-xl max-w-md w-full p-6 modal-content">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-bold">Register</h2>
-                        <button onclick="hideRegisterModal()" class="text-gray-500 hover:text-gray-700">
+                        <h2 class="text-xl font-bold">Register</h2>
+                        <button onclick="hideRegisterModal()" class="text-gray-500 hover:text-gray-700 p-2">
                             <i class="fas fa-times text-xl"></i>
                         </button>
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">Your Name</label>
-                        <input type="text" id="regName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="Enter your name">
+                        <input type="text" id="regName" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="Enter your name">
                     </div>
-                    <button onclick="registerUser()" class="gradient-btn text-white w-full py-2 rounded-lg font-semibold">
+                    <button onclick="registerUser()" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold">
                         <i class="fas fa-user-plus mr-2"></i>Register
                     </button>
                 </div>
@@ -278,143 +389,174 @@
 
             <!-- Success Modal -->
             <div id="successModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
-                <div class="bg-white rounded-xl max-w-md w-full p-6">
+                <div class="bg-white rounded-xl max-w-md w-full p-6 modal-content">
                     <div class="text-center">
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-check-circle text-3xl text-green-500"></i>
                         </div>
-                        <h2 class="text-2xl font-bold mb-2">Registration Successful!</h2>
-                        <p class="text-gray-600 mb-4">Your account is pending approval</p>
+                        <h2 class="text-xl font-bold mb-2">Registration Successful!</h2>
+                        <p class="text-sm text-gray-600 mb-4">Your account is pending approval</p>
                         <div class="bg-purple-50 p-4 rounded-lg mb-4">
-                            <p class="text-sm text-purple-600 mb-1">Your User ID:</p>
-                            <p id="successUserId" class="text-lg font-mono font-bold"></p>
+                            <p class="text-xs text-purple-600 mb-1">Your User ID:</p>
+                            <p id="successUserId" class="text-base font-mono font-bold break-all"></p>
                         </div>
                         <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                            <p class="text-sm text-gray-600 mb-1">Referral Link:</p>
-                            <p id="successLink" class="text-sm text-blue-600 break-all mb-2"></p>
-                            <button onclick="copySuccessLink()" class="text-purple-600 hover:text-purple-700">
+                            <p class="text-xs text-gray-600 mb-1">Referral Link:</p>
+                            <p id="successLink" class="text-xs text-blue-600 break-all mb-2"></p>
+                            <button onclick="copySuccessLink()" class="text-purple-600 hover:text-purple-700 p-2">
                                 <i class="fas fa-copy mr-1"></i>Copy Link
                             </button>
                         </div>
-                        <button onclick="goHome()" class="gradient-btn text-white px-6 py-2 rounded-lg">
+                        <button onclick="goHome()" class="gradient-btn text-white px-6 py-2 rounded-lg w-full">
                             Continue to Home
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Features -->
-            <div class="grid md:grid-cols-3 gap-6 my-12">
-                <div class="card p-6 text-center">
-                    <i class="fas fa-bolt text-3xl text-purple-600 mb-3"></i>
-                    <h3 class="font-semibold mb-2">Fast Payments</h3>
-                    <p class="text-gray-600">Instant withdrawals to your UPI</p>
-                </div>
-                <div class="card p-6 text-center">
-                    <i class="fas fa-shield-alt text-3xl text-purple-600 mb-3"></i>
-                    <h3 class="font-semibold mb-2">100% Secure</h3>
-                    <p class="text-gray-600">Your payments are protected</p>
-                </div>
-                <div class="card p-6 text-center">
-                    <i class="fas fa-headset text-3xl text-purple-600 mb-3"></i>
-                    <h3 class="font-semibold mb-2">24/7 Support</h3>
-                    <p class="text-gray-600">We're always here to help</p>
+            <!-- Recent Payouts Section -->
+            <div class="my-8">
+                <h2 class="text-xl font-bold text-center mb-6">💰 Recent Payouts</h2>
+                <div id="recentPayoutsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <p class="text-center text-gray-500 col-span-3">Loading payouts...</p>
                 </div>
             </div>
 
-            <!-- Payment Proofs -->
-            <div class="my-12">
-                <h2 class="text-2xl font-bold text-center mb-6">Recent Payments</h2>
-                <div id="proofsGrid" class="grid md:grid-cols-3 gap-6">
-                    <p class="text-center text-gray-500 col-span-3">Loading proofs...</p>
+            <!-- Features -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+                <div class="card p-6 text-center">
+                    <i class="fas fa-bolt text-2xl text-purple-600 mb-3"></i>
+                    <h3 class="font-semibold mb-2">Daily Earnings</h3>
+                    <p class="text-sm text-gray-600">Get paid every day for your views</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <i class="fas fa-shield-alt text-2xl text-purple-600 mb-3"></i>
+                    <h3 class="font-semibold mb-2">100% Secure</h3>
+                    <p class="text-sm text-gray-600">Your payments are protected</p>
+                </div>
+                <div class="card p-6 text-center">
+                    <i class="fas fa-headset text-2xl text-purple-600 mb-3"></i>
+                    <h3 class="font-semibold mb-2">24/7 Support</h3>
+                    <p class="text-sm text-gray-600">We're always here to help</p>
                 </div>
             </div>
         </div>
 
         <!-- Dashboard Section -->
         <div id="dashboardSection" class="hidden">
-            <div class="max-w-3xl mx-auto">
+            <div class="max-w-4xl mx-auto">
                 <!-- User ID Input -->
-                <div id="userIdInput" class="card p-6 mb-6">
-                    <h2 class="text-xl font-bold mb-4">Enter Your User ID</h2>
-                    <div class="flex gap-4">
-                        <input type="text" id="userId" class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="e.g., RETABC123">
-                        <button onclick="loadDashboard()" class="gradient-btn text-white px-6 py-2 rounded-lg">
+                <div id="userIdInput" class="card p-6 mb-4">
+                    <h2 class="text-lg font-bold mb-4">Enter Your User ID</h2>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="userId" class="flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="e.g., RETABC123">
+                        <button onclick="loadDashboard()" class="gradient-btn text-white px-6 py-3 rounded-lg w-full sm:w-auto">
                             View Dashboard
                         </button>
                     </div>
                 </div>
 
                 <!-- Dashboard Content -->
-                <div id="dashboardContent" class="hidden space-y-6">
+                <div id="dashboardContent" class="hidden space-y-4">
                     <!-- User Info -->
                     <div class="card p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-2xl font-bold" id="dashName"></h2>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                            <h2 class="text-xl font-bold" id="dashName"></h2>
                             <span id="dashStatus" class="status-badge"></span>
                         </div>
-                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-lg">
+                                <p class="text-sm opacity-90">Total Views</p>
+                                <p class="text-2xl font-bold" id="totalViews">0</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-lg">
+                                <p class="text-sm opacity-90">Total Earnings</p>
+                                <p class="text-2xl font-bold" id="totalEarnings">₹0</p>
+                            </div>
+                            <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-4 rounded-lg">
+                                <p class="text-sm opacity-90">Available Balance</p>
+                                <p class="text-2xl font-bold" id="availableBalance">₹0</p>
+                            </div>
+                        </div>
+
+                        <!-- User Details -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                             <div class="bg-gray-50 p-3 rounded">
-                                <p class="text-sm text-gray-500">User ID</p>
-                                <p id="dashUserId" class="font-mono font-semibold"></p>
+                                <p class="text-xs text-gray-500">User ID</p>
+                                <p id="dashUserId" class="text-sm font-mono font-semibold break-all"></p>
                             </div>
                             <div class="bg-gray-50 p-3 rounded">
-                                <p class="text-sm text-gray-500">Referral Link</p>
-                                <div class="flex items-center gap-2">
-                                    <p id="dashReferral" class="text-sm text-blue-600 truncate"></p>
-                                    <button onclick="copyDashLink()" class="copy-btn">
+                                <p class="text-xs text-gray-500">Referral Link</p>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <p id="dashReferral" class="text-xs text-blue-600 break-all flex-1"></p>
+                                    <button onclick="copyDashLink()" class="copy-btn p-2">
                                         <i class="fas fa-copy"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Monetag Link Section - Only visible when approved -->
+                        <!-- Monetag Link Section -->
                         <div id="monetagContainer" class="hidden bg-purple-50 p-4 rounded-lg mb-4">
-                            <p class="text-sm text-purple-600 mb-2">Your Earning Link:</p>
-                            <div class="flex items-center gap-2">
-                                <a id="monetagLink" href="#" target="_blank" class="text-blue-600 hover:underline flex-1 break-all"></a>
-                                <button onclick="copyMonetagLink()" class="copy-btn">
-                                    <i class="fas fa-copy mr-1"></i>Copy
+                            <p class="text-xs text-purple-600 mb-2">Your Earning Link:</p>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <a id="monetagLink" href="#" target="_blank" class="text-sm text-blue-600 hover:underline break-all flex-1"></a>
+                                <button onclick="copyMonetagLink()" class="copy-btn p-2">
+                                    <i class="fas fa-copy"></i>
                                 </button>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-blue-50 p-4 rounded text-center">
-                                <p class="text-2xl font-bold text-blue-600" id="dashViews">0</p>
-                                <p class="text-sm">Total Views</p>
-                            </div>
-                            <div class="bg-green-50 p-4 rounded text-center">
-                                <p class="text-2xl font-bold text-green-600" id="dashEarnings">₹0</p>
-                                <p class="text-sm">Total Earnings</p>
-                            </div>
+                    <!-- Daily Earnings Table -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold mb-4">📊 Daily Earnings</h3>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Views</th>
+                                        <th>Earnings</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="earningsTableBody">
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4 text-gray-500">Loading earnings...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
                     <!-- Withdrawal -->
                     <div class="card p-6">
-                        <h3 class="text-xl font-bold mb-4">Request Withdrawal</h3>
+                        <h3 class="text-lg font-bold mb-4">💰 Request Withdrawal</h3>
                         <div class="bg-purple-50 p-4 rounded mb-4">
-                            <p class="text-sm text-purple-600">Available Balance</p>
-                            <p class="text-3xl font-bold text-purple-700" id="balance">₹0</p>
+                            <p class="text-xs text-purple-600">Available Balance</p>
+                            <p class="text-2xl font-bold text-purple-700" id="balance">₹0</p>
                             <p class="text-xs text-purple-500 mt-1" id="minAmount">Min: ₹50</p>
                         </div>
                         <div class="space-y-4">
-                            <input type="number" id="withdrawAmount" class="w-full px-4 py-2 border rounded-lg" placeholder="Enter Amount">
+                            <input type="number" id="withdrawAmount" class="w-full px-4 py-3 border rounded-lg" placeholder="Enter Amount">
                             
                             <!-- Payment Methods -->
                             <div>
                                 <label class="block text-sm font-medium mb-2">Select Payment Method</label>
-                                <div class="grid grid-cols-3 gap-3">
-                                    <button onclick="setMethod('gpay')" id="methodGpay" class="method-btn">
-                                        <i class="fab fa-google-pay mr-2"></i>Google Pay
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button onclick="setMethod('gpay')" id="methodGpay" class="method-btn text-sm">
+                                        <i class="fab fa-google-pay"></i>
+                                        <span class="hidden sm:inline">Google Pay</span>
                                     </button>
-                                    <button onclick="setMethod('phonepe')" id="methodPhonepe" class="method-btn">
-                                        <i class="fas fa-mobile-alt mr-2"></i>PhonePe
+                                    <button onclick="setMethod('phonepe')" id="methodPhonepe" class="method-btn text-sm">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span class="hidden sm:inline">PhonePe</span>
                                     </button>
-                                    <button onclick="setMethod('upi')" id="methodUpi" class="method-btn active">
-                                        <i class="fas fa-university mr-2"></i>UPI
+                                    <button onclick="setMethod('upi')" id="methodUpi" class="method-btn text-sm active">
+                                        <i class="fas fa-university"></i>
+                                        <span class="hidden sm:inline">UPI</span>
                                     </button>
                                 </div>
                             </div>
@@ -422,21 +564,8 @@
                             <!-- UPI ID Input -->
                             <div>
                                 <label class="block text-sm font-medium mb-2">UPI ID</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="upiId" class="flex-1 px-4 py-2 border rounded-lg" placeholder="e.g., name@okhdfcbank">
-                                    <button onclick="validateUPI()" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">Example: username@okhdfcbank, username@ybl, username@apl</p>
-                            </div>
-
-                            <!-- UPI QR Option (for Google Pay/PhonePe) -->
-                            <div id="qrOption" class="hidden bg-blue-50 p-3 rounded-lg">
-                                <p class="text-sm text-blue-600 mb-2">Quick Option:</p>
-                                <button onclick="showQRScanner()" class="text-blue-600 hover:text-blue-700">
-                                    <i class="fas fa-qrcode mr-2"></i>Scan QR Code
-                                </button>
+                                <input type="text" id="upiId" class="w-full px-4 py-3 border rounded-lg" placeholder="e.g., name@okhdfcbank">
+                                <p class="text-xs text-gray-500 mt-1">Example: username@okhdfcbank, username@ybl</p>
                             </div>
 
                             <button onclick="submitWithdrawal()" id="withdrawBtn" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold">
@@ -447,9 +576,9 @@
 
                     <!-- Withdrawal History -->
                     <div class="card p-6">
-                        <h3 class="text-xl font-bold mb-4">Withdrawal History</h3>
+                        <h3 class="text-lg font-bold mb-4">📜 Withdrawal History</h3>
                         <div id="historyList" class="space-y-3">
-                            <p class="text-center text-gray-500">No history yet</p>
+                            <p class="text-center text-gray-500 py-4">No history yet</p>
                         </div>
                     </div>
                 </div>
@@ -460,16 +589,16 @@
         <div id="adminSection" class="hidden">
             <div class="max-w-7xl mx-auto">
                 <!-- Login Form -->
-                <div id="adminLogin" class="card p-8 max-w-md mx-auto">
-                    <h2 class="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+                <div id="adminLogin" class="card p-6 max-w-md mx-auto">
+                    <h2 class="text-xl font-bold mb-4 text-center">Admin Login</h2>
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Email</label>
-                            <input type="email" id="adminEmail" class="w-full px-4 py-3 border rounded-lg" value="admin@ram.com">
+                            <input type="email" id="adminEmail" class="w-full px-4 py-3 border rounded-lg" placeholder="Enter your email">
                         </div>
                         <div>
                             <label class="block text-sm font-medium mb-2">Password</label>
-                            <input type="password" id="adminPassword" class="w-full px-4 py-3 border rounded-lg">
+                            <input type="password" id="adminPassword" class="w-full px-4 py-3 border rounded-lg" placeholder="Enter your password">
                         </div>
                         <button onclick="adminLogin()" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold">
                             <i class="fas fa-sign-in-alt mr-2"></i>Login
@@ -480,47 +609,79 @@
                 <!-- Admin Dashboard -->
                 <div id="adminDashboard" class="hidden">
                     <!-- Stats Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                         <div class="stat-card">
-                            <p class="text-3xl font-bold" id="totalUsers">0</p>
-                            <p class="text-sm opacity-90">Total Users</p>
+                            <p class="text-xl font-bold" id="adminTotalUsers">0</p>
+                            <p class="text-xs">Total Users</p>
                         </div>
                         <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%)">
-                            <p class="text-3xl font-bold" id="pendingUsers">0</p>
-                            <p class="text-sm opacity-90">Pending</p>
+                            <p class="text-xl font-bold" id="adminPendingUsers">0</p>
+                            <p class="text-xs">Pending</p>
                         </div>
                         <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%)">
-                            <p class="text-3xl font-bold" id="approvedUsers">0</p>
-                            <p class="text-sm opacity-90">Approved</p>
+                            <p class="text-xl font-bold" id="adminApprovedUsers">0</p>
+                            <p class="text-xs">Approved</p>
                         </div>
                         <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)">
-                            <p class="text-3xl font-bold" id="totalWithdrawals">0</p>
-                            <p class="text-sm opacity-90">Total Withdrawals</p>
+                            <p class="text-xl font-bold" id="adminTotalWithdrawals">0</p>
+                            <p class="text-xs">Withdrawals</p>
                         </div>
                         <div class="stat-card" style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)">
-                            <p class="text-3xl font-bold" id="pendingWithdrawals">0</p>
-                            <p class="text-sm opacity-90">Pending Withdrawals</p>
+                            <p class="text-xl font-bold" id="adminPendingWithdrawals">0</p>
+                            <p class="text-xs">Pending WD</p>
                         </div>
                     </div>
 
                     <!-- Tabs -->
-                    <div class="flex gap-2 mb-6 border-b">
-                        <button onclick="switchTab('pending')" class="tab-btn active" id="pendingTabBtn">
-                            <i class="fas fa-clock mr-2"></i>Pending Users
+                    <div class="flex flex-wrap gap-2 mb-4 border-b">
+                        <button onclick="switchTab('users')" class="tab-btn px-4 py-2 text-sm active" id="usersTabBtn">
+                            <i class="fas fa-users mr-1"></i>All Users
                         </button>
-                        <button onclick="switchTab('approved')" class="tab-btn" id="approvedTabBtn">
-                            <i class="fas fa-check-circle mr-2"></i>Approved Users
+                        <button onclick="switchTab('pending')" class="tab-btn px-4 py-2 text-sm" id="pendingTabBtn">
+                            <i class="fas fa-clock mr-1"></i>Pending
                         </button>
-                        <button onclick="switchTab('withdrawals')" class="tab-btn" id="withdrawalsTabBtn">
-                            <i class="fas fa-money-bill-wave mr-2"></i>Withdrawals
+                        <button onclick="switchTab('approved')" class="tab-btn px-4 py-2 text-sm" id="approvedTabBtn">
+                            <i class="fas fa-check-circle mr-1"></i>Approved
+                        </button>
+                        <button onclick="switchTab('withdrawals')" class="tab-btn px-4 py-2 text-sm" id="withdrawalsTabBtn">
+                            <i class="fas fa-money-bill-wave mr-1"></i>Withdrawals
+                        </button>
+                        <button onclick="switchTab('earnings')" class="tab-btn px-4 py-2 text-sm" id="earningsTabBtn">
+                            <i class="fas fa-chart-line mr-1"></i>Add Earnings
                         </button>
                     </div>
 
-                    <!-- Pending Users Table -->
-                    <div id="pendingUsersTable" class="card p-6">
-                        <h3 class="text-xl font-bold mb-4">Pending Approval</h3>
+                    <!-- All Users Tab -->
+                    <div id="usersTab" class="card p-4">
+                        <h3 class="text-lg font-bold mb-4">All Users</h3>
                         <div class="overflow-x-auto">
-                            <table class="admin-table">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>User ID</th>
+                                        <th>Status</th>
+                                        <th>Total Views</th>
+                                        <th>Total Earnings</th>
+                                        <th>Withdrawn</th>
+                                        <th>Balance</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allUsersList">
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pending Users Tab -->
+                    <div id="pendingTab" class="hidden card p-4">
+                        <h3 class="text-lg font-bold mb-4">Pending Approval</h3>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -531,18 +692,18 @@
                                 </thead>
                                 <tbody id="pendingUsersList">
                                     <tr>
-                                        <td colspan="4" class="text-center py-8 text-gray-500">Loading...</td>
+                                        <td colspan="4" class="text-center py-4">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Approved Users Table -->
-                    <div id="approvedUsersTable" class="hidden card p-6">
-                        <h3 class="text-xl font-bold mb-4">Approved Users</h3>
+                    <!-- Approved Users Tab -->
+                    <div id="approvedTab" class="hidden card p-4">
+                        <h3 class="text-lg font-bold mb-4">Approved Users</h3>
                         <div class="overflow-x-auto">
-                            <table class="admin-table">
+                            <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -550,42 +711,81 @@
                                         <th>Views</th>
                                         <th>Earnings</th>
                                         <th>Monetag Link</th>
-                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="approvedUsersList">
                                     <tr>
-                                        <td colspan="7" class="text-center py-8 text-gray-500">Loading...</td>
+                                        <td colspan="6" class="text-center py-4">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Withdrawals Table -->
-                    <div id="withdrawalsTable" class="hidden card p-6">
-                        <h3 class="text-xl font-bold mb-4">Withdrawal Requests</h3>
+                    <!-- Withdrawals Tab -->
+                    <div id="withdrawalsTab" class="hidden card p-4">
+                        <h3 class="text-lg font-bold mb-4">Withdrawal Requests</h3>
                         <div class="overflow-x-auto">
-                            <table class="admin-table">
+                            <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>User</th>
                                         <th>Amount</th>
                                         <th>Method</th>
-                                        <th>UPI ID</th>
+                                        <th>UPI</th>
                                         <th>Date</th>
                                         <th>Status</th>
-                                        <th>Proof</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="withdrawalsList">
                                     <tr>
-                                        <td colspan="8" class="text-center py-8 text-gray-500">Loading...</td>
+                                        <td colspan="7" class="text-center py-4">Loading...</td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    <!-- Add Earnings Tab -->
+                    <div id="earningsTab" class="hidden card p-4">
+                        <h3 class="text-lg font-bold mb-4">➕ Add Daily Earnings</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- User Selection -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Select User</label>
+                                <select id="earningsUserSelect" class="w-full px-4 py-3 border rounded-lg">
+                                    <option value="">Loading users...</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Earnings Form -->
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Date</label>
+                                    <input type="date" id="earningsDate" class="w-full px-4 py-3 border rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Views</label>
+                                    <input type="number" id="earningsViews" class="w-full px-4 py-3 border rounded-lg" placeholder="Enter views count">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Earnings (₹)</label>
+                                    <input type="number" id="earningsAmount" class="w-full px-4 py-3 border rounded-lg" placeholder="Enter earnings amount">
+                                </div>
+                                <button onclick="addDailyEarnings()" class="gradient-btn text-white w-full py-3 rounded-lg font-semibold">
+                                    <i class="fas fa-plus-circle mr-2"></i>Add Earnings
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Earnings for Selected User -->
+                        <div class="mt-6">
+                            <h4 class="font-bold mb-3">Recent Earnings for Selected User</h4>
+                            <div id="selectedUserEarnings" class="space-y-2">
+                                <p class="text-center text-gray-500">Select a user to view earnings</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -647,16 +847,26 @@
         // Auth State
         onAuthStateChanged(auth, (user) => {
             if (user && user.email === 'admin@ram.com') {
-                document.getElementById('adminBtn').classList.add('hidden');
-                document.getElementById('logoutBtn').classList.remove('hidden');
+                // Hide admin buttons, show logout
+                document.getElementById('desktopAdminBtn')?.classList.add('hidden');
+                document.getElementById('mobileAdminBtn')?.classList.add('hidden');
+                document.getElementById('desktopLogoutBtn')?.classList.remove('hidden');
+                document.getElementById('mobileLogoutBtn')?.classList.remove('hidden');
+                
                 if (!document.getElementById('adminSection').classList.contains('hidden')) {
                     document.getElementById('adminLogin').classList.add('hidden');
                     document.getElementById('adminDashboard').classList.remove('hidden');
                     loadAdminData();
+                    // Load users dropdown when admin dashboard is shown
+                    loadUsersDropdown();
                 }
             } else {
-                document.getElementById('adminBtn').classList.remove('hidden');
-                document.getElementById('logoutBtn').classList.add('hidden');
+                // Show admin buttons, hide logout
+                document.getElementById('desktopAdminBtn')?.classList.remove('hidden');
+                document.getElementById('mobileAdminBtn')?.classList.remove('hidden');
+                document.getElementById('desktopLogoutBtn')?.classList.add('hidden');
+                document.getElementById('mobileLogoutBtn')?.classList.add('hidden');
+                
                 document.getElementById('adminLogin').classList.remove('hidden');
                 document.getElementById('adminDashboard').classList.add('hidden');
             }
@@ -670,62 +880,67 @@
         let currentMethod = 'upi';
         let usersListener = null;
         let withdrawalsListener = null;
-        let historyListener = null;
+        let earningsListener = null;
+        let recentPayoutsListener = null;
+        let usersDropdownListener = null;
+
+        // Mobile Navigation
+        function openMobileNav() {
+            document.getElementById('mobileNav').classList.add('open');
+            document.getElementById('mobileNavOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileNav() {
+            document.getElementById('mobileNav').classList.remove('open');
+            document.getElementById('mobileNavOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
 
         // Helper Functions
         function showLoading() {
             document.getElementById('loadingOverlay').classList.remove('hidden');
         }
+        
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
+        
         function showToast(title, msg, icon) {
-            Swal.fire({ title, text: msg, icon, timer: 2000, showConfirmButton: false });
+            Swal.fire({ 
+                title, 
+                text: msg, 
+                icon, 
+                timer: 2000, 
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
         }
+        
         function generateId() {
             return 'RET' + Math.random().toString(36).substring(2, 8).toUpperCase();
         }
+        
         function maskName(name) {
             if (!name) return '';
-            if (name.length <= 2) return name[0] + '*';
-            return name[0] + '*'.repeat(name.length - 2) + name[name.length - 1];
+            if (name.length <= 2) return name[0] + '***';
+            return name.substring(0, 2) + '***';
         }
+        
         function formatDate(timestamp) {
             if (!timestamp) return 'N/A';
             try {
                 const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-                return date.toLocaleDateString('en-IN');
+                return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
             } catch {
                 return 'N/A';
             }
         }
-
-        // UPI Validation
-        function validateUPI() {
-            const upi = document.getElementById('upiId').value.trim();
-            const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
-            
-            if (!upi) {
-                showToast('Error', 'Enter UPI ID', 'error');
-                return false;
-            }
-            
-            if (!upiRegex.test(upi)) {
-                showToast('Error', 'Invalid UPI format', 'error');
-                return false;
-            }
-            
-            showToast('Success', 'Valid UPI ID', 'success');
-            return true;
-        }
-
-        function showQRScanner() {
-            Swal.fire({
-                title: 'Scan QR Code',
-                text: 'Please use your UPI app to scan QR code',
-                icon: 'info',
-                confirmButtonColor: '#8b5cf6'
-            });
+        
+        function formatDateForInput(date) {
+            const d = new Date();
+            return d.toISOString().split('T')[0];
         }
 
         // Navigation
@@ -734,10 +949,11 @@
             document.getElementById('dashboardSection').classList.add('hidden');
             document.getElementById('adminSection').classList.add('hidden');
             document.getElementById(section + 'Section').classList.remove('hidden');
+            closeMobileNav();
             
             if (section === 'home') {
                 document.getElementById('userLogoutBtn').classList.add('hidden');
-                loadProofs();
+                loadRecentPayouts();
             } else if (section === 'dashboard') {
                 document.getElementById('userLogoutBtn').classList.remove('hidden');
             } else {
@@ -748,7 +964,7 @@
         // User Logout
         function userLogout() {
             currentUser = null;
-            currentUserId = null;
+            if (earningsListener) earningsListener();
             document.getElementById('userIdInput').classList.remove('hidden');
             document.getElementById('dashboardContent').classList.add('hidden');
             document.getElementById('userId').value = '';
@@ -760,20 +976,27 @@
         // Registration
         function showRegisterModal() {
             document.getElementById('registerModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
+        
         function hideRegisterModal() {
             document.getElementById('registerModal').classList.add('hidden');
+            document.body.style.overflow = '';
             document.getElementById('regName').value = '';
         }
+        
         function goHome() {
             document.getElementById('successModal').classList.add('hidden');
+            document.body.style.overflow = '';
             showSection('home');
         }
+        
         function copySuccessLink() {
             const link = document.getElementById('successLink').textContent;
             navigator.clipboard.writeText(link);
-            showToast('Copied!', 'Link copied to clipboard', 'success');
+            showToast('Copied!', 'Link copied', 'success');
         }
+        
         function copyMonetagLink() {
             const link = document.getElementById('monetagLink').href;
             navigator.clipboard.writeText(link);
@@ -800,8 +1023,6 @@
                         referralLink,
                         status: 'pending',
                         monetagLink: '',
-                        totalViews: 0,
-                        totalEarnings: 0,
                         isFirstWithdrawal: true,
                         createdAt: window.firebaseFunctions.serverTimestamp()
                     }
@@ -818,38 +1039,48 @@
             }
         }
 
-        // Payment Proofs
-        async function loadProofs() {
+        // Recent Payouts
+        function loadRecentPayouts() {
             try {
                 const q = window.firebaseFunctions.query(
                     window.firebaseFunctions.collection(db, 'withdrawals'),
                     window.firebaseFunctions.where('status', '==', 'approved'),
                     window.firebaseFunctions.orderBy('date', 'desc'),
-                    window.firebaseFunctions.limit(6)
+                    window.firebaseFunctions.limit(10)
                 );
-                const snap = await window.firebaseFunctions.getDocs(q);
-                const grid = document.getElementById('proofsGrid');
-                
-                if (snap.empty) {
-                    grid.innerHTML = '<p class="text-center text-gray-500 col-span-3">No proofs yet</p>';
-                    return;
-                }
 
-                let html = '';
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    html += `
-                        <div class="card overflow-hidden">
-                            <img src="${d.paymentProofImage}" class="h-40 w-full object-cover cursor-pointer" onclick="window.open('${d.paymentProofImage}')">
-                            <div class="p-4">
-                                <p class="font-semibold">${maskName(d.userName)}</p>
-                                <p class="text-green-600 font-bold">₹${d.amount}</p>
-                                <p class="text-sm text-gray-500">${formatDate(d.date)}</p>
+                if (recentPayoutsListener) recentPayoutsListener();
+                
+                recentPayoutsListener = window.firebaseFunctions.onSnapshot(q, (snap) => {
+                    const grid = document.getElementById('recentPayoutsGrid');
+                    
+                    if (snap.empty) {
+                        grid.innerHTML = '<p class="text-center text-gray-500 col-span-3 py-8">No payouts yet</p>';
+                        return;
+                    }
+
+                    let html = '';
+                    snap.forEach(doc => {
+                        const d = doc.data();
+                        html += `
+                            <div class="card p-4 payout-card animate__animated animate__fadeInUp">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-rupee-sign text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-lg">₹${d.amount}</p>
+                                        <p class="text-sm text-gray-600">
+                                            Sent to ${maskName(d.userName)} via ${d.method}
+                                        </p>
+                                        <p class="text-xs text-gray-400">${formatDate(d.date)}</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    });
+                    grid.innerHTML = html;
                 });
-                grid.innerHTML = html;
             } catch (err) {
                 console.error(err);
             }
@@ -877,20 +1108,14 @@
                 const data = docSnap.data();
                 currentUser = { id: docSnap.id, ...data };
 
-                // Update UI
+                // Update basic info
                 document.getElementById('dashName').textContent = data.name;
                 document.getElementById('dashUserId').textContent = data.userId;
                 document.getElementById('dashReferral').textContent = data.referralLink;
-                document.getElementById('dashViews').textContent = data.totalViews || 0;
-                document.getElementById('dashEarnings').textContent = '₹' + (data.totalEarnings || 0);
-                document.getElementById('balance').textContent = '₹' + (data.totalEarnings || 0);
                 
                 const statusEl = document.getElementById('dashStatus');
                 statusEl.textContent = data.status;
                 statusEl.className = 'status-badge status-' + data.status;
-
-                const minAmt = data.isFirstWithdrawal ? 50 : 200;
-                document.getElementById('minAmount').textContent = `Min: ₹${minAmt}`;
 
                 // Show Monetag link only if approved
                 if (data.status === 'approved' && data.monetagLink) {
@@ -901,17 +1126,8 @@
                     document.getElementById('monetagContainer').classList.add('hidden');
                 }
 
-                const btn = document.getElementById('withdrawBtn');
-                if (data.totalEarnings < minAmt || data.status !== 'approved') {
-                    btn.disabled = true;
-                    btn.classList.add('opacity-50');
-                } else {
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50');
-                }
-
-                // Load history
-                loadHistory(uid);
+                // Load earnings and calculate totals
+                loadUserEarnings(uid);
 
                 document.getElementById('userIdInput').classList.add('hidden');
                 document.getElementById('dashboardContent').classList.remove('hidden');
@@ -923,19 +1139,89 @@
             }
         }
 
-        function loadHistory(uid) {
-            if (historyListener) historyListener();
+        function loadUserEarnings(uid) {
+            if (earningsListener) earningsListener();
             
+            const q = window.firebaseFunctions.query(
+                window.firebaseFunctions.collection(db, 'earnings'),
+                window.firebaseFunctions.where('userId', '==', uid),
+                window.firebaseFunctions.orderBy('date', 'desc')
+            );
+
+            earningsListener = window.firebaseFunctions.onSnapshot(q, async (snap) => {
+                let totalViews = 0;
+                let totalEarnings = 0;
+                let tableHtml = '';
+
+                // Calculate totals from earnings
+                snap.forEach(doc => {
+                    const e = doc.data();
+                    totalViews += e.views || 0;
+                    totalEarnings += e.earnings || 0;
+                    
+                    tableHtml += `
+                        <tr>
+                            <td>${e.date || formatDate(e.createdAt)}</td>
+                            <td>${e.views || 0}</td>
+                            <td>₹${e.earnings || 0}</td>
+                        </tr>
+                    `;
+                });
+
+                // Get approved withdrawals total
+                const withdrawalsQuery = window.firebaseFunctions.query(
+                    window.firebaseFunctions.collection(db, 'withdrawals'),
+                    window.firebaseFunctions.where('userId', '==', uid),
+                    window.firebaseFunctions.where('status', '==', 'approved')
+                );
+                
+                const withdrawalsSnap = await window.firebaseFunctions.getDocs(withdrawalsQuery);
+                let totalWithdrawn = 0;
+                withdrawalsSnap.forEach(doc => {
+                    totalWithdrawn += doc.data().amount || 0;
+                });
+
+                // Calculate available balance
+                const availableBalance = totalEarnings - totalWithdrawn;
+
+                // Update UI
+                document.getElementById('totalViews').textContent = totalViews;
+                document.getElementById('totalEarnings').textContent = '₹' + totalEarnings;
+                document.getElementById('availableBalance').textContent = '₹' + availableBalance;
+                document.getElementById('balance').textContent = '₹' + availableBalance;
+
+                // Update earnings table
+                document.getElementById('earningsTableBody').innerHTML = tableHtml || '<tr><td colspan="3" class="text-center py-4">No earnings yet</td></tr>';
+
+                // Update min amount and withdraw button
+                const minAmt = currentUser.isFirstWithdrawal ? 50 : 200;
+                document.getElementById('minAmount').textContent = `Min: ₹${minAmt}`;
+                
+                const btn = document.getElementById('withdrawBtn');
+                if (availableBalance < minAmt || currentUser.status !== 'approved') {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50');
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50');
+                }
+            });
+
+            // Load withdrawal history
+            loadWithdrawalHistory(uid);
+        }
+
+        function loadWithdrawalHistory(uid) {
             const q = window.firebaseFunctions.query(
                 window.firebaseFunctions.collection(db, 'withdrawals'),
                 window.firebaseFunctions.where('userId', '==', uid),
                 window.firebaseFunctions.orderBy('date', 'desc')
             );
 
-            historyListener = window.firebaseFunctions.onSnapshot(q, (snap) => {
+            window.firebaseFunctions.onSnapshot(q, (snap) => {
                 const list = document.getElementById('historyList');
                 if (snap.empty) {
-                    list.innerHTML = '<p class="text-center text-gray-500">No history yet</p>';
+                    list.innerHTML = '<p class="text-center text-gray-500 py-4">No history yet</p>';
                     return;
                 }
 
@@ -943,18 +1229,14 @@
                 snap.forEach(doc => {
                     const d = doc.data();
                     html += `
-                        <div class="bg-gray-50 p-3 rounded flex justify-between items-center">
-                            <div>
-                                <p class="font-semibold">₹${d.amount}</p>
-                                <p class="text-xs text-gray-500">${d.method} • ${d.upiId} • ${formatDate(d.date)}</p>
-                            </div>
-                            <div class="flex items-center gap-2">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-semibold">₹${d.amount}</p>
+                                    <p class="text-xs text-gray-500">${d.method} • ${d.upiId}</p>
+                                    <p class="text-xs text-gray-400">${formatDate(d.date)}</p>
+                                </div>
                                 <span class="status-badge status-${d.status}">${d.status}</span>
-                                ${d.paymentProofImage ? `
-                                    <button onclick="window.open('${d.paymentProofImage}')" class="text-blue-600 hover:text-blue-700">
-                                        <i class="fas fa-image"></i>
-                                    </button>
-                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -969,13 +1251,6 @@
                 btn.classList.remove('active');
             });
             document.getElementById(`method${method.charAt(0).toUpperCase() + method.slice(1)}`).classList.add('active');
-            
-            // Show QR option for Google Pay and PhonePe
-            if (method === 'gpay' || method === 'phonepe') {
-                document.getElementById('qrOption').classList.remove('hidden');
-            } else {
-                document.getElementById('qrOption').classList.add('hidden');
-            }
         }
 
         async function submitWithdrawal() {
@@ -989,16 +1264,22 @@
                 showToast('Error', `Minimum ₹${min}`, 'error');
                 return;
             }
-            if (amt > currentUser.totalEarnings) {
+
+            // Check against available balance
+            const balanceText = document.getElementById('availableBalance').textContent;
+            const availableBalance = parseInt(balanceText.replace('₹', ''));
+            
+            if (amt > availableBalance) {
                 showToast('Error', 'Insufficient balance', 'error');
                 return;
             }
+
             if (!upi) {
                 showToast('Error', 'Enter UPI ID', 'error');
                 return;
             }
 
-            // Validate UPI format
+            // Simple UPI validation
             const upiRegex = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
             if (!upiRegex.test(upi)) {
                 showToast('Error', 'Invalid UPI format', 'error');
@@ -1016,7 +1297,6 @@
                         method: currentMethod,
                         upiId: upi,
                         status: 'pending',
-                        paymentProofImage: '',
                         date: window.firebaseFunctions.serverTimestamp()
                     }
                 );
@@ -1041,6 +1321,11 @@
             const email = document.getElementById('adminEmail').value;
             const pass = document.getElementById('adminPassword').value;
 
+            if (!email || !pass) {
+                showToast('Error', 'Please enter email and password', 'error');
+                return;
+            }
+
             showLoading();
             try {
                 await window.firebaseFunctions.signInWithEmailAndPassword(auth, email, pass);
@@ -1055,48 +1340,244 @@
             await window.firebaseFunctions.signOut(auth);
             if (usersListener) usersListener();
             if (withdrawalsListener) withdrawalsListener();
-            if (historyListener) historyListener();
+            if (earningsListener) earningsListener();
+            if (recentPayoutsListener) recentPayoutsListener();
+            if (usersDropdownListener) usersDropdownListener();
             showSection('home');
         }
 
         function switchTab(tab) {
-            document.getElementById('pendingUsersTable').classList.add('hidden');
-            document.getElementById('approvedUsersTable').classList.add('hidden');
-            document.getElementById('withdrawalsTable').classList.add('hidden');
+            // Hide all tabs
+            document.getElementById('usersTab').classList.add('hidden');
+            document.getElementById('pendingTab').classList.add('hidden');
+            document.getElementById('approvedTab').classList.add('hidden');
+            document.getElementById('withdrawalsTab').classList.add('hidden');
+            document.getElementById('earningsTab').classList.add('hidden');
             
-            document.getElementById('pendingTabBtn').classList.remove('active');
-            document.getElementById('approvedTabBtn').classList.remove('active');
-            document.getElementById('withdrawalsTabBtn').classList.remove('active');
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
             
-            if (tab === 'pending') {
-                document.getElementById('pendingUsersTable').classList.remove('hidden');
-                document.getElementById('pendingTabBtn').classList.add('active');
-            } else if (tab === 'approved') {
-                document.getElementById('approvedUsersTable').classList.remove('hidden');
-                document.getElementById('approvedTabBtn').classList.add('active');
-            } else {
-                document.getElementById('withdrawalsTable').classList.remove('hidden');
-                document.getElementById('withdrawalsTabBtn').classList.add('active');
+            // Show selected tab
+            document.getElementById(tab + 'Tab').classList.remove('hidden');
+            document.getElementById(tab + 'TabBtn').classList.add('active');
+            
+            // Set default date if earnings tab
+            if (tab === 'earnings') {
+                document.getElementById('earningsDate').value = formatDateForInput();
             }
         }
 
-        function loadAdminData() {
+        // NEW FUNCTION: Load users dropdown with real-time updates
+        function loadUsersDropdown() {
+            const usersRef = window.firebaseFunctions.collection(db, 'users');
+            
+            if (usersDropdownListener) {
+                usersDropdownListener();
+            }
+
+            usersDropdownListener = window.firebaseFunctions.onSnapshot(usersRef, (snapshot) => {
+                const select = document.getElementById('earningsUserSelect');
+                
+                // Start with default option
+                let options = '<option value="">Choose a user...</option>';
+                
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Use document ID as userId (since we store with userId as doc ID)
+                    options += `<option value="${doc.id}">${data.name} (${doc.id})</option>`;
+                });
+                
+                select.innerHTML = options;
+                
+                // If no users found
+                if (snapshot.empty) {
+                    select.innerHTML = '<option value="">No users found</option>';
+                }
+            }, (error) => {
+                console.error('Error loading users dropdown:', error);
+                document.getElementById('earningsUserSelect').innerHTML = '<option value="">Error loading users</option>';
+            });
+        }
+
+        async function addDailyEarnings() {
+            const userId = document.getElementById('earningsUserSelect').value;
+            const date = document.getElementById('earningsDate').value;
+            const views = parseInt(document.getElementById('earningsViews').value);
+            const earnings = parseInt(document.getElementById('earningsAmount').value);
+
+            if (!userId) {
+                showToast('Error', 'Select a user', 'error');
+                return;
+            }
+            if (!date) {
+                showToast('Error', 'Select date', 'error');
+                return;
+            }
+            if (!views || views < 0) {
+                showToast('Error', 'Enter valid views', 'error');
+                return;
+            }
+            if (!earnings || earnings < 0) {
+                showToast('Error', 'Enter valid earnings', 'error');
+                return;
+            }
+
+            showLoading();
+            try {
+                await window.firebaseFunctions.addDoc(
+                    window.firebaseFunctions.collection(db, 'earnings'),
+                    {
+                        userId,
+                        date,
+                        views,
+                        earnings,
+                        createdAt: window.firebaseFunctions.serverTimestamp()
+                    }
+                );
+
+                // Clear form
+                document.getElementById('earningsViews').value = '';
+                document.getElementById('earningsAmount').value = '';
+                
+                showToast('Success', 'Earnings added successfully', 'success');
+                
+                // Show recent earnings for this user
+                showUserRecentEarnings(userId);
+            } catch (err) {
+                showToast('Error', err.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function showUserRecentEarnings(userId) {
             const q = window.firebaseFunctions.query(
+                window.firebaseFunctions.collection(db, 'earnings'),
+                window.firebaseFunctions.where('userId', '==', userId),
+                window.firebaseFunctions.orderBy('date', 'desc'),
+                window.firebaseFunctions.limit(5)
+            );
+            
+            const snap = await window.firebaseFunctions.getDocs(q);
+            let html = '';
+            
+            snap.forEach(doc => {
+                const e = doc.data();
+                html += `
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="flex justify-between">
+                            <span class="font-medium">${e.date}</span>
+                            <span>${e.views} views</span>
+                            <span class="text-green-600 font-bold">₹${e.earnings}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('selectedUserEarnings').innerHTML = html || '<p class="text-center text-gray-500">No earnings for this user</p>';
+        }
+
+        // Add event listener for user select change
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up change listener for user select
+            const userSelect = document.getElementById('earningsUserSelect');
+            if (userSelect) {
+                userSelect.addEventListener('change', function(e) {
+                    if (e.target.value) {
+                        showUserRecentEarnings(e.target.value);
+                    } else {
+                        document.getElementById('selectedUserEarnings').innerHTML = '<p class="text-center text-gray-500">Select a user to view earnings</p>';
+                    }
+                });
+            }
+        });
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            showToast('Copied!', 'Text copied', 'success');
+        }
+
+        async function updateUserStatus(uid, status) {
+            await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'users', uid), { status });
+            showToast('Success', `User ${status}`, 'success');
+        }
+
+        function editUser(uid, link) {
+            Swal.fire({
+                title: 'Edit User',
+                html: `
+                    <div class="space-y-3">
+                        <input id="monetag" class="w-full p-3 border rounded-lg text-sm" value="${link}" placeholder="Monetag Link">
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Update',
+                confirmButtonColor: '#8b5cf6',
+                preConfirm: () => ({
+                    monetagLink: document.getElementById('monetag').value
+                })
+            }).then(async (r) => {
+                if (r.isConfirmed) {
+                    await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'users', uid), r.value);
+                    showToast('Success', 'User updated', 'success');
+                }
+            });
+        }
+
+        async function approveWithdrawal(wid, uid) {
+            try {
+                await window.firebaseFunctions.updateDoc(
+                    window.firebaseFunctions.doc(db, 'withdrawals', wid),
+                    { status: 'approved' }
+                );
+
+                // Update user's first withdrawal status
+                const userDoc = await window.firebaseFunctions.getDoc(
+                    window.firebaseFunctions.doc(db, 'users', uid)
+                );
+                
+                if (userDoc.exists() && userDoc.data().isFirstWithdrawal) {
+                    await window.firebaseFunctions.updateDoc(
+                        window.firebaseFunctions.doc(db, 'users', uid),
+                        { isFirstWithdrawal: false }
+                    );
+                }
+
+                showToast('Success', 'Withdrawal approved', 'success');
+            } catch (err) {
+                showToast('Error', err.message, 'error');
+            }
+        }
+
+        async function rejectWithdrawal(wid) {
+            await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'withdrawals', wid), { status: 'rejected' });
+            showToast('Success', 'Withdrawal rejected', 'success');
+        }
+
+        async function loadAdminData() {
+            // Load users
+            const usersQuery = window.firebaseFunctions.query(
                 window.firebaseFunctions.collection(db, 'users'),
                 window.firebaseFunctions.orderBy('createdAt', 'desc')
             );
 
             if (usersListener) usersListener();
-            usersListener = window.firebaseFunctions.onSnapshot(q, (snap) => {
+            usersListener = window.firebaseFunctions.onSnapshot(usersQuery, async (snap) => {
+                let allUsersHtml = '';
                 let pendingHtml = '';
                 let approvedHtml = '';
                 let total = 0;
                 let pending = 0;
                 let approved = 0;
                 
-                snap.forEach(doc => {
+                for (const doc of snap.docs) {
                     const u = doc.data();
                     total++;
+                    
+                    // Get user totals
+                    const totals = await calculateUserTotals(u.userId);
                     
                     if (u.status === 'pending') {
                         pending++;
@@ -1107,10 +1588,10 @@
                                 <td>${formatDate(u.createdAt)}</td>
                                 <td>
                                     <div class="flex gap-2">
-                                        <button onclick="updateUserStatus('${u.userId}', 'approved')" class="action-btn approve">
+                                        <button onclick="updateUserStatus('${u.userId}', 'approved')" class="px-3 py-1 bg-green-600 text-white rounded-lg text-sm">
                                             <i class="fas fa-check"></i> Approve
                                         </button>
-                                        <button onclick="updateUserStatus('${u.userId}', 'rejected')" class="action-btn reject">
+                                        <button onclick="updateUserStatus('${u.userId}', 'rejected')" class="px-3 py-1 bg-red-600 text-white rounded-lg text-sm">
                                             <i class="fas fa-times"></i> Reject
                                         </button>
                                     </div>
@@ -1123,45 +1604,65 @@
                             <tr>
                                 <td class="font-medium">${u.name}</td>
                                 <td><span class="font-mono text-sm">${u.userId}</span></td>
-                                <td>${u.totalViews || 0}</td>
-                                <td>₹${u.totalEarnings || 0}</td>
+                                <td>${totals.views}</td>
+                                <td>₹${totals.earnings}</td>
                                 <td>
                                     ${u.monetagLink ? `
                                         <div class="flex items-center gap-2">
                                             <span class="text-sm text-blue-600 truncate max-w-[150px]">${u.monetagLink}</span>
-                                            <button onclick="copyText('${u.monetagLink}')" class="copy-btn">
+                                            <button onclick="copyText('${u.monetagLink}')" class="copy-btn p-1">
                                                 <i class="fas fa-copy"></i>
                                             </button>
                                         </div>
                                     ` : '<span class="text-gray-400">Not set</span>'}
                                 </td>
-                                <td><span class="status-badge status-approved">Approved</span></td>
                                 <td>
-                                    <button onclick="editUser('${u.userId}', '${u.monetagLink || ''}', ${u.totalViews || 0}, ${u.totalEarnings || 0})" class="action-btn edit">
+                                    <button onclick="editUser('${u.userId}', '${u.monetagLink || ''}')" class="px-3 py-1 bg-purple-600 text-white rounded-lg text-sm">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
                                 </td>
                             </tr>
                         `;
                     }
-                });
+                    
+                    // All users row with calculations
+                    allUsersHtml += `
+                        <tr>
+                            <td class="font-medium">${u.name}</td>
+                            <td><span class="font-mono text-sm">${u.userId}</span></td>
+                            <td><span class="status-badge status-${u.status}">${u.status}</span></td>
+                            <td>${totals.views}</td>
+                            <td>₹${totals.earnings}</td>
+                            <td>₹${totals.withdrawn}</td>
+                            <td>₹${totals.balance}</td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <button onclick="editUser('${u.userId}', '${u.monetagLink || ''}')" class="text-purple-600 hover:text-purple-700">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
 
-                document.getElementById('pendingUsersList').innerHTML = pendingHtml || '<tr><td colspan="4" class="text-center py-8">No pending users</td></tr>';
-                document.getElementById('approvedUsersList').innerHTML = approvedHtml || '<tr><td colspan="7" class="text-center py-8">No approved users</td></tr>';
+                document.getElementById('allUsersList').innerHTML = allUsersHtml || '<tr><td colspan="8" class="text-center py-4">No users found</td></tr>';
+                document.getElementById('pendingUsersList').innerHTML = pendingHtml || '<tr><td colspan="4" class="text-center py-4">No pending users</td></tr>';
+                document.getElementById('approvedUsersList').innerHTML = approvedHtml || '<tr><td colspan="6" class="text-center py-4">No approved users</td></tr>';
                 
-                document.getElementById('totalUsers').textContent = total;
-                document.getElementById('pendingUsers').textContent = pending;
-                document.getElementById('approvedUsers').textContent = approved;
+                document.getElementById('adminTotalUsers').textContent = total;
+                document.getElementById('adminPendingUsers').textContent = pending;
+                document.getElementById('adminApprovedUsers').textContent = approved;
             });
 
             // Load withdrawals
-            const wq = window.firebaseFunctions.query(
+            const withdrawalsQuery = window.firebaseFunctions.query(
                 window.firebaseFunctions.collection(db, 'withdrawals'),
                 window.firebaseFunctions.orderBy('date', 'desc')
             );
 
             if (withdrawalsListener) withdrawalsListener();
-            withdrawalsListener = window.firebaseFunctions.onSnapshot(wq, (snap) => {
+            withdrawalsListener = window.firebaseFunctions.onSnapshot(withdrawalsQuery, (snap) => {
                 let html = '';
                 let total = 0;
                 let pending = 0;
@@ -1180,19 +1681,12 @@
                             <td>${formatDate(w.date)}</td>
                             <td><span class="status-badge status-${w.status}">${w.status}</span></td>
                             <td>
-                                ${w.paymentProofImage ? `
-                                    <button onclick="window.open('${w.paymentProofImage}')" class="action-btn view">
-                                        <i class="fas fa-image"></i> View
-                                    </button>
-                                ` : '<span class="text-gray-400">No proof</span>'}
-                            </td>
-                            <td>
                                 <div class="flex gap-2">
                                     ${w.status === 'pending' ? `
-                                        <button onclick="approveWithdrawal('${doc.id}', '${w.userId}')" class="action-btn approve">
+                                        <button onclick="approveWithdrawal('${doc.id}', '${w.userId}')" class="px-3 py-1 bg-green-600 text-white rounded-lg text-sm">
                                             <i class="fas fa-check"></i>
                                         </button>
-                                        <button onclick="rejectWithdrawal('${doc.id}')" class="action-btn reject">
+                                        <button onclick="rejectWithdrawal('${doc.id}')" class="px-3 py-1 bg-red-600 text-white rounded-lg text-sm">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     ` : ''}
@@ -1202,91 +1696,52 @@
                     `;
                 });
 
-                document.getElementById('withdrawalsList').innerHTML = html || '<tr><td colspan="8" class="text-center py-8">No withdrawals found</td></tr>';
-                document.getElementById('totalWithdrawals').textContent = total;
-                document.getElementById('pendingWithdrawals').textContent = pending;
+                document.getElementById('withdrawalsList').innerHTML = html || '<tr><td colspan="7" class="text-center py-4">No withdrawals found</td></tr>';
+                document.getElementById('adminTotalWithdrawals').textContent = total;
+                document.getElementById('adminPendingWithdrawals').textContent = pending;
             });
         }
 
-        function copyText(text) {
-            navigator.clipboard.writeText(text);
-            showToast('Copied!', 'Text copied to clipboard', 'success');
-        }
+        async function calculateUserTotals(userId) {
+            let views = 0;
+            let earnings = 0;
+            let withdrawn = 0;
 
-        async function updateUserStatus(uid, status) {
-            await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'users', uid), { status });
-            showToast('Success', `User ${status}`, 'success');
-        }
-
-        function editUser(uid, link, views, earnings) {
-            Swal.fire({
-                title: 'Edit User',
-                html: `
-                    <div class="space-y-3">
-                        <input id="monetag" class="w-full p-2 border rounded" value="${link}" placeholder="Monetag Link">
-                        <input id="views" type="number" class="w-full p-2 border rounded" value="${views}" placeholder="Total Views">
-                        <input id="earnings" type="number" class="w-full p-2 border rounded" value="${earnings}" placeholder="Total Earnings">
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: 'Update',
-                confirmButtonColor: '#8b5cf6',
-                preConfirm: () => ({
-                    monetagLink: document.getElementById('monetag').value,
-                    totalViews: parseInt(document.getElementById('views').value) || 0,
-                    totalEarnings: parseInt(document.getElementById('earnings').value) || 0
-                })
-            }).then(async (r) => {
-                if (r.isConfirmed) {
-                    await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'users', uid), r.value);
-                    showToast('Success', 'User updated', 'success');
-                }
-            });
-        }
-
-        async function approveWithdrawal(wid, uid) {
-            const { value: file } = await Swal.fire({
-                title: 'Upload Payment Proof',
-                input: 'file',
-                inputAttributes: { accept: 'image/*' },
-                confirmButtonColor: '#8b5cf6'
+            // Get earnings
+            const earningsQuery = window.firebaseFunctions.query(
+                window.firebaseFunctions.collection(db, 'earnings'),
+                window.firebaseFunctions.where('userId', '==', userId)
+            );
+            const earningsSnap = await window.firebaseFunctions.getDocs(earningsQuery);
+            earningsSnap.forEach(doc => {
+                const e = doc.data();
+                views += e.views || 0;
+                earnings += e.earnings || 0;
             });
 
-            if (file) {
-                showLoading();
-                try {
-                    const storageRef = window.firebaseFunctions.ref(storage, `proofs/${wid}_${Date.now()}`);
-                    await window.firebaseFunctions.uploadBytes(storageRef, file);
-                    const url = await window.firebaseFunctions.getDownloadURL(storageRef);
+            // Get approved withdrawals
+            const withdrawalsQuery = window.firebaseFunctions.query(
+                window.firebaseFunctions.collection(db, 'withdrawals'),
+                window.firebaseFunctions.where('userId', '==', userId),
+                window.firebaseFunctions.where('status', '==', 'approved')
+            );
+            const withdrawalsSnap = await window.firebaseFunctions.getDocs(withdrawalsQuery);
+            withdrawalsSnap.forEach(doc => {
+                withdrawn += doc.data().amount || 0;
+            });
 
-                    await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'withdrawals', wid), {
-                        status: 'approved',
-                        paymentProofImage: url
-                    });
-
-                    const user = await window.firebaseFunctions.getDoc(window.firebaseFunctions.doc(db, 'users', uid));
-                    if (user.exists() && user.data().isFirstWithdrawal) {
-                        await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'users', uid), {
-                            isFirstWithdrawal: false
-                        });
-                    }
-
-                    showToast('Success', 'Withdrawal approved', 'success');
-                } catch (err) {
-                    showToast('Error', err.message, 'error');
-                } finally {
-                    hideLoading();
-                }
-            }
-        }
-
-        async function rejectWithdrawal(wid) {
-            await window.firebaseFunctions.updateDoc(window.firebaseFunctions.doc(db, 'withdrawals', wid), { status: 'rejected' });
-            showToast('Success', 'Withdrawal rejected', 'success');
+            return {
+                views,
+                earnings,
+                withdrawn,
+                balance: earnings - withdrawn
+            };
         }
 
         // Expose functions
         window.showSection = showSection;
+        window.openMobileNav = openMobileNav;
+        window.closeMobileNav = closeMobileNav;
         window.showRegisterModal = showRegisterModal;
         window.hideRegisterModal = hideRegisterModal;
         window.registerUser = registerUser;
@@ -1297,8 +1752,6 @@
         window.setMethod = setMethod;
         window.submitWithdrawal = submitWithdrawal;
         window.copyDashLink = copyDashLink;
-        window.validateUPI = validateUPI;
-        window.showQRScanner = showQRScanner;
         window.adminLogin = adminLogin;
         window.logout = logout;
         window.userLogout = userLogout;
@@ -1308,10 +1761,25 @@
         window.approveWithdrawal = approveWithdrawal;
         window.rejectWithdrawal = rejectWithdrawal;
         window.copyText = copyText;
+        window.addDailyEarnings = addDailyEarnings;
+        window.loadUsersDropdown = loadUsersDropdown;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            loadProofs();
+            loadRecentPayouts();
+            
+            // Set up change listener for user select
+            const userSelect = document.getElementById('earningsUserSelect');
+            if (userSelect) {
+                userSelect.addEventListener('change', function(e) {
+                    if (e.target.value) {
+                        showUserRecentEarnings(e.target.value);
+                    } else {
+                        document.getElementById('selectedUserEarnings').innerHTML = '<p class="text-center text-gray-500">Select a user to view earnings</p>';
+                    }
+                });
+            }
+            
             const ref = new URLSearchParams(location.search).get('ref');
             if (ref) {
                 document.getElementById('userId').value = ref;
